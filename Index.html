@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGNAL VPN</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #FF0000;
+    --red-dark: #CC0000;
+    --red-glow: rgba(255,0,0,0.3);
+    --white: #FFFFFF;
+    --black: #0D0D0D;
+    --surface: #161616;
+    --surface2: #1F1F1F;
+    --muted: #555;
+    --text: #DDDDDD;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 10px;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+    background: var(--red);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-icon svg { width: 24px; height: 24px; }
+
+  .logo-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--white);
+  }
+
+  .logo-text span { color: var(--red); }
+
+  .status-badge {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+    transition: all 0.4s ease;
+  }
+
+  .status-badge.connected {
+    border-color: var(--red);
+    color: var(--red);
+    background: rgba(255,0,0,0.08);
+    box-shadow: 0 0 12px var(--red-glow);
+  }
+
+  /* MAIN */
+  main {
+    width: 100%;
+    max-width: 480px;
+    padding: 10px 24px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* CONNECT BUTTON ZONE */
+  .connect-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 28px 0 10px;
+  }
+
+  .btn-wrap {
+    position: relative;
+    width: 160px;
+    height: 160px;
+  }
+
+  /* Pulsing rings — visible only when connected */
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px solid var(--red);
+    opacity: 0;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.6);
+    pointer-events: none;
+    transition: none;
+  }
+
+  .connected .ring { animation: pulse-ring 2s ease-out infinite; }
+  .connected .ring:nth-child(2) { animation-delay: 0.6s; }
+  .connected .ring:nth-child(3) { animation-delay: 1.2s; }
+
+  @keyframes pulse-ring {
+    0%   { transform: translate(-50%,-50%) scale(0.65); opacity: 0.7; }
+    100% { transform: translate(-50%,-50%) scale(1.5); opacity: 0; }
+  }
+
+  .btn-connect {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: var(--surface2);
+    border: 2.5px solid var(--surface2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+    z-index: 2;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .btn-connect:active { transform: scale(0.96); }
+
+  .btn-connect.connected {
+    background: var(--red-dark);
+    border-color: var(--red);
+    box-shadow: 0 0 40px var(--red-glow), inset 0 0 20px rgba(255,0,0,0.15);
+  }
+
+  .btn-icon { transition: transform 0.3s; }
+  .btn-connect:active .btn-icon { transform: scale(0.9); }
+
+  .btn-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--muted);
+    transition: color 0.4s;
+  }
+
+  .btn-connect.connected .btn-label { color: var(--white); }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .stat-icon { font-size: 16px; margin-bottom: 2px; }
+
+  .stat-value {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    transition: color 0.4s;
+  }
+
+  .stat-value.live { color: var(--red); }
+
+  .stat-label {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: -8px;
+  }
+
+  /* PROTOCOL GRID */
+  .proto-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .proto-card {
+    background: var(--surface);
+    border: 1.5px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .proto-card:active { transform: scale(0.98); }
+
+  .proto-card.selected {
+    border-color: var(--red);
+    background: rgba(255,0,0,0.07);
+    box-shadow: 0 0 16px rgba(255,0,0,0.15);
+  }
+
+  .proto-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+    transition: background 0.25s, box-shadow 0.25s;
+  }
+
+  .proto-card.selected .proto-dot {
+    background: var(--red);
+    box-shadow: 0 0 8px var(--red);
+  }
+
+  .proto-info { flex: 1; }
+
+  .proto-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.5px;
+  }
+
+  .proto-desc {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .proto-tag {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid #2a2a2a;
+    color: var(--muted);
+    transition: border-color 0.25s, color 0.25s;
+  }
+
+  .proto-card.selected .proto-tag {
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  /* SERVER SELECT */
+  .server-select-wrap {
+    position: relative;
+  }
+
+  .server-select {
+    width: 100%;
+    background: var(--surface);
+    border: 1.5px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color 0.25s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .server-select:hover { border-color: #444; }
+
+  .server-left { display: flex; align-items: center; gap: 12px; }
+
+  .flag { font-size: 22px; }
+
+  .server-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .server-ping {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .server-ping .ping-val { color: #4CAF50; font-weight: 600; }
+
+  .chevron { color: var(--muted); transition: transform 0.25s; }
+  .server-select.open .chevron { transform: rotate(180deg); }
+
+  /* DROPDOWN */
+  .server-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0; right: 0;
+    background: var(--surface2);
+    border: 1.5px solid #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 10;
+    display: none;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  }
+
+  .server-dropdown.open { display: block; }
+
+  .server-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid #252525;
+  }
+
+  .server-option:last-child { border-bottom: none; }
+  .server-option:hover { background: rgba(255,255,255,0.04); }
+  .server-option.active { background: rgba(255,0,0,0.07); }
+
+  .server-option .server-left { gap: 12px; }
+  .server-option .server-name { font-size: 14px; }
+
+  .ping-chip {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: rgba(76,175,80,0.12);
+    color: #4CAF50;
+    border: 1px solid rgba(76,175,80,0.25);
+  }
+
+  .ping-chip.medium { background: rgba(255,152,0,0.12); color: #FF9800; border-color: rgba(255,152,0,0.25); }
+  .ping-chip.high { background: rgba(244,67,54,0.12); color: #F44336; border-color: rgba(244,67,54,0.25); }
+
+  /* LOG TERMINAL */
+  .log-box {
+    background: var(--surface);
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 14px 16px;
+    height: 110px;
+    overflow-y: auto;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px;
+    line-height: 1.6;
+    scrollbar-width: thin;
+    scrollbar-color: #333 transparent;
+  }
+
+  .log-line { color: var(--muted); }
+  .log-line.info { color: #5b9cf6; }
+  .log-line.success { color: #4CAF50; }
+  .log-line.error { color: var(--red); }
+  .log-line.warn { color: #FF9800; }
+
+  /* CONFIG PANEL */
+  .config-panel {
+    background: var(--surface);
+    border: 1px solid #222;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .config-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid #1e1e1e;
+  }
+
+  .config-row:last-child { border-bottom: none; }
+
+  .config-left { display: flex; flex-direction: column; gap: 2px; }
+
+  .config-key {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.5px;
+  }
+
+  .config-hint { font-size: 10px; color: var(--muted); }
+
+  /* TOGGLE */
+  .toggle {
+    position: relative;
+    width: 40px; height: 22px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .toggle input { display: none; }
+
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    border-radius: 11px;
+    background: #333;
+    transition: background 0.3s;
+  }
+
+  .toggle input:checked + .toggle-track { background: var(--red); }
+
+  .toggle-thumb {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: white;
+    transition: transform 0.3s;
+    pointer-events: none;
+  }
+
+  .toggle input:checked ~ .toggle-thumb { transform: translateX(18px); }
+
+  /* INPUT */
+  .config-input {
+    background: var(--black);
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    padding: 6px 10px;
+    width: 130px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .config-input:focus { border-color: var(--red); }
+
+  /* BOTTOM NAV */
+  nav {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid #1e1e1e;
+    padding: 12px 0 20px;
+    margin-top: auto;
+  }
+
+  .nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+    background: none;
+    border: none;
+    -webkit-tap-highlight-color: transparent;
+    padding: 4px 16px;
+  }
+
+  .nav-btn.active { opacity: 1; }
+  .nav-btn.active .nav-dot { background: var(--red); }
+
+  .nav-icon { font-size: 20px; }
+
+  .nav-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: transparent;
+  }
+
+  /* CONNECTING ANIMATION overlay */
+  .connecting-bar {
+    height: 2px;
+    background: var(--surface);
+    border-radius: 1px;
+    overflow: hidden;
+    margin-top: -16px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .connecting-bar.active { opacity: 1; }
+
+  .connecting-bar-inner {
+    height: 100%;
+    width: 40%;
+    background: var(--red);
+    border-radius: 1px;
+    animation: slide-bar 1s ease-in-out infinite alternate;
+  }
+
+  @keyframes slide-bar {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(350%); }
+  }
+
+  /* TIMER */
+  .timer {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-align: center;
+    transition: color 0.4s;
+  }
+
+  .timer.active { color: var(--red); }
+
+  /* PAGE TABS */
+  .page { display: none; flex-direction: column; gap: 24px; }
+  .page.active { display: flex; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" opacity=".2"/>
+        <ellipse cx="12" cy="10" rx="7" ry="5" transform="rotate(-30 12 10)" stroke="white" stroke-width="1.8" fill="none"/>
+        <circle cx="12" cy="10" r="1.5" fill="white"/>
+        <line x1="12" y1="10" x2="12" y2="22" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M9 21h6" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M6 5 Q4 3 3 2" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M5 7 Q2 5 1 3" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none" opacity=".6"/>
+      </svg>
+    </div>
+    <span class="logo-text">SIGNAL<span>VPN</span></span>
+  </div>
+  <div class="status-badge" id="statusBadge">INACTIF</div>
+</header>
+
+<!-- PAGE: HOME -->
+<main>
+  <div class="page active" id="pageHome">
+
+    <!-- CONNECT BUTTON -->
+    <div class="connect-zone">
+      <div class="btn-wrap" id="btnWrap">
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <button class="btn-connect" id="btnConnect" onclick="toggleConnect()">
+          <div class="btn-icon">
+            <svg id="btnSvg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <circle cx="24" cy="24" r="20" stroke="#444" stroke-width="2"/>
+              <path id="powerPath" d="M24 14 V24" stroke="#888" stroke-width="3" stroke-linecap="round"/>
+              <path id="arcPath" d="M16 17.5 A10 10 0 1 0 32 17.5" stroke="#888" stroke-width="3" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <span class="btn-label" id="btnLabel">CONNECTER</span>
+        </button>
+      </div>
+      <div class="timer" id="timer">00:00:00</div>
+      <div class="connecting-bar" id="connectingBar">
+        <div class="connecting-bar-inner"></div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon">⬇</div>
+        <div class="stat-value" id="statDown">0 B</div>
+        <div class="stat-label">Téléch.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⬆</div>
+        <div class="stat-value" id="statUp">0 B</div>
+        <div class="stat-label">Envoi</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📶</div>
+        <div class="stat-value" id="statPing">—</div>
+        <div class="stat-label">Ping</div>
+      </div>
+    </div>
+
+    <!-- PROTOCOL -->
+    <div class="section-title">Protocole</div>
+    <div class="proto-grid" id="protoGrid">
+      <div class="proto-card selected" onclick="selectProto(this,'UDP')">
+        <div class="proto-dot"></div>
+        <div class="proto-info">
+          <div class="proto-name">UDP</div>
+          <div class="proto-desc">Rapide & léger</div>
+        </div>
+        <div class="proto-tag">RAPIDE</div>
+      </div>
+      <div class="proto-card" onclick="selectProto(this,'V2RAY')">
+        <div class="proto-dot"></div>
+        <div class="proto-info">
+          <div class="proto-name">V2RAY</div>
+          <div class="proto-desc">VMess / VLESS</div>
+        </div>
+        <div class="proto-tag">STABLE</div>
+      </div>
+      <div class="proto-card" onclick="selectProto(this,'TROJAN')">
+        <div class="proto-dot"></div>
+        <div class="proto-info">
+          <div class="proto-name">TROJAN</div>
+          <div class="proto-desc">TLS masqué</div>
+        </div>
+        <div class="proto-tag">SÉCURISÉ</div>
+      </div>
+      <div class="proto-card" onclick="selectProto(this,'SLOWDNS')">
+        <div class="proto-dot"></div>
+        <div class="proto-info">
+          <div class="proto-name">SlowDNS</div>
+          <div class="proto-desc">Via DNS tunnel</div>
+        </div>
+        <div class="proto-tag">BYPASS</div>
+      </div>
+      <div class="proto-card" style="grid-column: span 2;" onclick="selectProto(this,'SSL')">
+        <div class="proto-dot"></div>
+        <div class="proto-info">
+          <div class="proto-name">SSL / STUNNEL</div>
+          <div class="proto-desc">Chiffrement SSL sur SSH</div>
+        </div>
+        <div class="proto-tag">CHIFFRÉ</div>
+      </div>
+    </div>
+
+    <!-- SERVER -->
+    <div class="section-title">Serveur</div>
+    <div class="server-select-wrap">
+      <div class="server-select" id="serverSelect" onclick="toggleDropdown()">
+        <div class="server-left">
+          <span class="flag" id="selFlag">🇫🇷</span>
+          <div>
+            <div class="server-name" id="selName">France — Paris</div>
+            <div class="server-ping">Ping <span class="ping-val" id="selPing">28ms</span></div>
+          </div>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="server-dropdown" id="serverDropdown">
+        <div class="server-option active" onclick="selectServer(this,'🇫🇷','France — Paris','28ms','low')">
+          <div class="server-left"><span class="flag">🇫🇷</span>
+            <div><div class="server-name">France — Paris</div><div class="server-ping">Premium</div></div></div>
+          <span class="ping-chip">28ms</span>
+        </div>
+        <div class="server-option" onclick="selectServer(this,'🇩🇪','Allemagne — Berlin','35ms','low')">
+          <div class="server-left"><span class="flag">🇩🇪</span>
+            <div><div class="server-name">Allemagne — Berlin</div><div class="server-ping">Premium</div></div></div>
+          <span class="ping-chip">35ms</span>
+        </div>
+        <div class="server-option" onclick="selectServer(this,'🇳🇱','Pays-Bas — Amsterdam','31ms','low')">
+          <div class="server-left"><span class="flag">🇳🇱</span>
+            <div><div class="server-name">Pays-Bas — Amsterdam</div><div class="server-ping">Premium</div></div></div>
+          <span class="ping-chip">31ms</span>
+        </div>
+        <div class="server-option" onclick="selectServer(this,'🇺🇸','USA — New York','120ms','medium')">
+          <div class="server-left"><span class="flag">🇺🇸</span>
+            <div><div class="server-name">USA — New York</div><div class="server-ping">Standard</div></div></div>
+          <span class="ping-chip medium">120ms</span>
+        </div>
+        <div class="server-option" onclick="selectServer(this,'🇸🇬','Singapour','95ms','medium')">
+          <div class="server-left"><span class="flag">🇸🇬</span>
+            <div><div class="server-name">Singapour</div><div class="server-ping">Standard</div></div></div>
+          <span class="ping-chip medium">95ms</span>
+        </div>
+        <div class="server-option" onclick="selectServer(this,'🌍','Afrique — Gratuit','210ms','high')">
+          <div class="server-left"><span class="flag">🌍</span>
+            <div><div class="server-name">Afrique — Gratuit</div><div class="server-ping">Gratuit</div></div></div>
+          <span class="ping-chip high">210ms</span>
+        </div>
+      </div>
+          </div>
+          
