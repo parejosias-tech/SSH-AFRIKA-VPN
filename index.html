@@ -727,5 +727,352 @@
           <span class="ping-chip high">210ms</span>
         </div>
       </div>
-          </div>
-          
+    </div>
+
+    <!-- LOG -->
+    <div class="section-title">Journal</div>
+    <div class="log-box" id="logBox">
+      <div class="log-line info">[SIGNAL] Application démarrée.</div>
+      <div class="log-line">[SYS] Protocole actif : UDP</div>
+      <div class="log-line">[SYS] Serveur sélectionné : France — Paris</div>
+    </div>
+
+  </div>
+
+  <!-- PAGE: CONFIG -->
+  <div class="page" id="pageConfig">
+    <div class="section-title">Configuration SSH</div>
+    <div class="config-panel">
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">Hôte SSH</span>
+          <span class="config-hint">Adresse IP ou domaine</span>
+        </div>
+        <input class="config-input" type="text" value="ssh.signal-vpn.net" id="cfgHost"/>
+      </div>
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">Port SSH</span>
+          <span class="config-hint">Défaut : 22</span>
+        </div>
+        <input class="config-input" type="number" value="22" id="cfgPort" style="width:80px"/>
+      </div>
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">Utilisateur</span>
+          <span class="config-hint">Identifiant de connexion</span>
+        </div>
+        <input class="config-input" type="text" value="user" id="cfgUser"/>
+      </div>
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">Mot de passe</span>
+          <span class="config-hint">Ou clé privée</span>
+        </div>
+        <input class="config-input" type="password" placeholder="••••••" id="cfgPass"/>
+      </div>
+    </div>
+
+    <div class="section-title">Configuration Proxy</div>
+    <div class="config-panel">
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">Port Proxy</span>
+          <span class="config-hint">Squid / local</span>
+        </div>
+        <input class="config-input" type="number" value="3128" style="width:80px"/>
+      </div>
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">Port WS</span>
+          <span class="config-hint">WebSocket (V2Ray)</span>
+        </div>
+        <input class="config-input" type="number" value="8880" style="width:80px"/>
+      </div>
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">SNI / Hostname</span>
+          <span class="config-hint">Pour SSL / Trojan</span>
+        </div>
+        <input class="config-input" type="text" value="free.example.net"/>
+      </div>
+    </div>
+
+    <div class="section-title">Options avancées</div>
+    <div class="config-panel">
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">Kill Switch</span>
+          <span class="config-hint">Couper si VPN déconnecté</span>
+        </div>
+        <label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+      </div>
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">DNS sécurisé</span>
+          <span class="config-hint">DNS over HTTPS</span>
+        </div>
+        <label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+      </div>
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">Auto-reconnect</span>
+          <span class="config-hint">Reconnexion automatique</span>
+        </div>
+        <label class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+      </div>
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">Compression</span>
+          <span class="config-hint">SSH -C (économise data)</span>
+        </div>
+        <label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: INFO -->
+  <div class="page" id="pageInfo">
+    <div class="section-title">À propos</div>
+    <div class="config-panel">
+      <div class="config-row">
+        <div class="config-left"><span class="config-key">Application</span></div>
+        <span style="font-family:Rajdhani;font-size:14px;color:#fff;font-weight:700;">SIGNAL VPN</span>
+      </div>
+      <div class="config-row">
+        <div class="config-left"><span class="config-key">Version</span></div>
+        <span style="font-size:13px;color:var(--muted)">1.0.0</span>
+      </div>
+      <div class="config-row">
+        <div class="config-left"><span class="config-key">Build</span></div>
+        <span style="font-size:13px;color:var(--muted)">2026.06.11</span>
+      </div>
+      <div class="config-row">
+        <div class="config-left"><span class="config-key">Protocoles</span></div>
+        <span style="font-size:12px;color:var(--red);font-family:Rajdhani;font-weight:600;">UDP · V2RAY · TROJAN · SlowDNS · SSL</span>
+      </div>
+      <div class="config-row">
+        <div class="config-left"><span class="config-key">Powered by</span></div>
+        <span style="font-size:13px;color:var(--muted)">Yeelen Afrika</span>
+      </div>
+    </div>
+
+    <div class="section-title">Usage responsable</div>
+    <div class="config-panel">
+      <div class="config-row" style="display:block; padding:16px">
+        <div style="font-size:12px; color:var(--muted); line-height:1.8;">
+          Ce VPN est destiné à protéger votre vie privée et contourner les restrictions réseau légitimes. Toute utilisation à des fins illégales est strictement interdite. Respectez les lois de votre pays.
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Clé d'activation</div>
+    <div class="config-panel">
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">Plan actuel</span>
+          <span class="config-hint">Expire dans 7 jours</span>
+        </div>
+        <span style="font-size:12px;background:rgba(255,0,0,0.12);color:var(--red);border:1px solid rgba(255,0,0,0.3);border-radius:4px;padding:3px 8px;font-family:Rajdhani;font-weight:700;">GRATUIT</span>
+      </div>
+      <div class="config-row">
+        <div class="config-left">
+          <span class="config-key">Code d'activation</span>
+          <span class="config-hint">Entrez votre clé premium</span>
+        </div>
+        <input class="config-input" type="text" placeholder="XXXX-XXXX" style="width:120px"/>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav>
+  <button class="nav-btn active" id="nav0" onclick="goPage(0)">
+    <span class="nav-icon">🏠</span>
+    <div class="nav-dot"></div>
+  </button>
+  <button class="nav-btn" id="nav1" onclick="goPage(1)">
+    <span class="nav-icon">⚙️</span>
+    <div class="nav-dot"></div>
+  </button>
+  <button class="nav-btn" id="nav2" onclick="goPage(2)">
+    <span class="nav-icon">ℹ️</span>
+    <div class="nav-dot"></div>
+  </button>
+</nav>
+
+<script>
+  // ── STATE ──
+  let connected = false;
+  let connecting = false;
+  let selectedProto = 'UDP';
+  let timerInterval = null;
+  let statsInterval = null;
+  let seconds = 0;
+  let downBytes = 0, upBytes = 0;
+
+  // ── PAGES ──
+  function goPage(n) {
+    document.querySelectorAll('.page').forEach((p,i) => {
+      p.classList.toggle('active', i === n);
+    });
+    document.querySelectorAll('.nav-btn').forEach((b,i) => {
+      b.classList.toggle('active', i === n);
+    });
+  }
+
+  // ── PROTOCOL ──
+  function selectProto(el, name) {
+    if (connected) return;
+    document.querySelectorAll('.proto-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedProto = name;
+    addLog(`[SYS] Protocole changé : ${name}`, 'info');
+  }
+
+  // ── SERVER DROPDOWN ──
+  function toggleDropdown() {
+    const sel = document.getElementById('serverSelect');
+    const dd  = document.getElementById('serverDropdown');
+    const open = dd.classList.toggle('open');
+    sel.classList.toggle('open', open);
+  }
+
+  function selectServer(el, flag, name, ping, level) {
+    document.querySelectorAll('.server-option').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('selFlag').textContent = flag;
+    document.getElementById('selName').textContent = name;
+    document.getElementById('selPing').textContent = ping;
+    document.getElementById('serverDropdown').classList.remove('open');
+    document.getElementById('serverSelect').classList.remove('open');
+    addLog(`[SYS] Serveur sélectionné : ${name}`, 'info');
+  }
+
+  document.addEventListener('click', e => {
+    const wrap = document.querySelector('.server-select-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      document.getElementById('serverDropdown').classList.remove('open');
+      document.getElementById('serverSelect').classList.remove('open');
+    }
+  });
+
+  // ── CONNECT ──
+  function toggleConnect() {
+    if (connecting) return;
+    if (!connected) startConnect();
+    else disconnect();
+  }
+
+  function startConnect() {
+    connecting = true;
+    const bar = document.getElementById('connectingBar');
+    const btn = document.getElementById('btnConnect');
+    const lbl = document.getElementById('btnLabel');
+    bar.classList.add('active');
+    lbl.textContent = 'CONNEXION…';
+    addLog(`[VPN] Initialisation protocole ${selectedProto}…`, 'info');
+    addLog(`[SSH] Connexion au serveur en cours…`, 'info');
+
+    setTimeout(() => {
+      addLog(`[SSH] Tunnel établi ✓`, 'success');
+    }, 800);
+
+    setTimeout(() => {
+      addLog(`[VPN] Chiffrement actif ✓`, 'success');
+    }, 1400);
+
+    setTimeout(() => {
+      connecting = false;
+      connected = true;
+      bar.classList.remove('active');
+      btn.classList.add('connected');
+      document.getElementById('btnWrap').classList.add('connected');
+      lbl.textContent = 'DÉCONNECTER';
+      document.getElementById('statusBadge').textContent = 'CONNECTÉ';
+      document.getElementById('statusBadge').classList.add('connected');
+      // Animate power icon
+      document.getElementById('powerPath').setAttribute('stroke', '#fff');
+      document.getElementById('arcPath').setAttribute('stroke', '#fff');
+      document.querySelector('#btnSvg circle').setAttribute('stroke', 'rgba(255,255,255,0.3)');
+      // Timer
+      seconds = 0;
+      timerInterval = setInterval(tickTimer, 1000);
+      document.getElementById('timer').classList.add('active');
+      // Fake stats
+      statsInterval = setInterval(fakeStats, 1200);
+      addLog(`[VPN] Connecté — IP masquée ✓`, 'success');
+      document.getElementById('statPing').textContent = document.getElementById('selPing').textContent;
+      document.getElementById('statPing').classList.add('live');
+    }, 2200);
+  }
+
+  function disconnect() {
+    connected = false;
+    clearInterval(timerInterval);
+    clearInterval(statsInterval);
+    document.getElementById('btnConnect').classList.remove('connected');
+    document.getElementById('btnWrap').classList.remove('connected');
+    document.getElementById('btnLabel').textContent = 'CONNECTER';
+    document.getElementById('statusBadge').textContent = 'INACTIF';
+    document.getElementById('statusBadge').classList.remove('connected');
+    document.getElementById('timer').textContent = '00:00:00';
+    document.getElementById('timer').classList.remove('active');
+    document.getElementById('powerPath').setAttribute('stroke', '#888');
+    document.getElementById('arcPath').setAttribute('stroke', '#888');
+    document.querySelector('#btnSvg circle').setAttribute('stroke', '#444');
+    document.getElementById('statDown').textContent = '0 B';
+    document.getElementById('statDown').classList.remove('live');
+    document.getElementById('statUp').textContent = '0 B';
+    document.getElementById('statUp').classList.remove('live');
+    document.getElementById('statPing').textContent = '—';
+    document.getElementById('statPing').classList.remove('live');
+    downBytes = 0; upBytes = 0;
+    addLog(`[VPN] Déconnecté.`, 'warn');
+  }
+
+  // ── TIMER ──
+  function tickTimer() {
+    seconds++;
+    const h = String(Math.floor(seconds/3600)).padStart(2,'0');
+    const m = String(Math.floor((seconds%3600)/60)).padStart(2,'0');
+    const s = String(seconds%60).padStart(2,'0');
+    document.getElementById('timer').textContent = `${h}:${m}:${s}`;
+  }
+
+  // ── FAKE STATS ──
+  function fakeStats() {
+    downBytes += Math.random()*50000 + 5000;
+    upBytes   += Math.random()*10000 + 1000;
+    const dEl = document.getElementById('statDown');
+    const uEl = document.getElementById('statUp');
+    dEl.textContent = formatBytes(downBytes);
+    uEl.textContent = formatBytes(upBytes);
+    dEl.classList.add('live');
+    uEl.classList.add('live');
+  }
+
+  function formatBytes(b) {
+    if (b < 1024) return b.toFixed(0)+' B';
+    if (b < 1024*1024) return (b/1024).toFixed(1)+' KB';
+    return (b/1024/1024).toFixed(2)+' MB';
+  }
+
+  // ── LOG ──
+  function addLog(msg, type='') {
+    const box = document.getElementById('logBox');
+    const line = document.createElement('div');
+    line.className = 'log-line ' + type;
+    const now = new Date();
+    const ts = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+    line.textContent = `[${ts}] ${msg.replace(/^\[.*?\]/,m=>m)}`;
+    box.appendChild(line);
+    box.scrollTop = box.scrollHeight;
+    // Keep max 30 lines
+    while (box.children.length > 30) box.removeChild(box.firstChild);
+  }
+</script>
+</body>
+</html>
